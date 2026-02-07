@@ -45,6 +45,7 @@ public class RabbitConfig {
         DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
         typeMapper.setTypePrecedence(Jackson2JavaTypeMapper.TypePrecedence.INFERRED);
         typeMapper.setIdClassMapping(Collections.emptyMap());
+        typeMapper.setTrustedPackages("br.com.fiap.hackaton.dto.request", "java.util", "java.lang");
         converter.setJavaTypeMapper(typeMapper);
         return converter;
     }
