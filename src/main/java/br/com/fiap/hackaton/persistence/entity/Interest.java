@@ -31,6 +31,8 @@ public class Interest {
 
     private String examHashCode;
 
+    private Boolean isNotified;
+
     private OffsetDateTime createdAt;
 
     private OffsetDateTime updatedAt;
@@ -41,6 +43,7 @@ public class Interest {
         this.phoneNumber = interestRequest.phoneNumber();
         this.examName = interestRequest.examName();
         this.examHashCode = interestRequest.examHashCode();
+        this.isNotified = Boolean.FALSE;
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
     }

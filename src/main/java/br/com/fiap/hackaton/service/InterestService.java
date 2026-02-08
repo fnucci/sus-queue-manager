@@ -34,4 +34,8 @@ public class InterestService {
         log.info("Persiste o Interest no banco de dados");
         interestRepository.save(interest);
     }
+
+    public Optional<Interest> findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode) {
+        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(examHashCode);
+    }
 }

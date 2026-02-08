@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     Optional<Interest> findByPacienteCnsAndExamHashCode(String pacienteCns, String examHashCode);
+
+    Optional<Interest> findFirstByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode);
 }

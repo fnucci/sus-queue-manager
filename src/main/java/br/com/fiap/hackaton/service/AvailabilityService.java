@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,5 +37,10 @@ public class AvailabilityService {
         log.info("Persiste a vaga no banco de dados");
         availabilityRepository.save(availability);
 
+    }
+
+    public List<Availability> findAllAvailable() {
+        log.info("Busca todas as vagas disponíveis no banco de dados");
+        return availabilityRepository.findAllByIsAvailableTrue();
     }
 }
