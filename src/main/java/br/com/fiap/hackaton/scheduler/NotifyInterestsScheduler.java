@@ -36,7 +36,12 @@ public class NotifyInterestsScheduler {
             log.info("Obtem todos os interesses relacionados ao exame e que ainda não foram notificados");
             Optional<Interest> interestOptional = interestService.findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(availability.getExamHashCode());
             log.info("Notifica via algum canal, whatsapp, email, sms, etc");
-            interestOptional.ifPresent(interest -> this.notificationServices.forEach(v -> v.sendNotification(interest, availability)));
+            if (interestOptional. isPresent()){
+                Interest interest = interestOptional.get();
+                this.notificationServices.forEach(v -> v.sendNotification(interest, availability));
+                interestService.updateInterestAsNotified(interest);
+            }
+            availabilityService.updateAvailabilityAsNotified(availability);
         }
     }
 }

@@ -38,4 +38,10 @@ public class InterestService {
     public Optional<Interest> findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode) {
         return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(examHashCode);
     }
+
+    public void updateInterestAsNotified(Interest interest) {
+        log.info("Atualiza o interesse como notificado");
+        interest.setIsNotified(Boolean.TRUE);
+        interestRepository.save(interest);
+    }
 }

@@ -2,16 +2,13 @@ package br.com.fiap.hackaton.service;
 
 import br.com.fiap.hackaton.dto.request.AvailabilityRequest;
 import br.com.fiap.hackaton.exception.custom.AvailabilityAlreadyRegisteredException;
-import br.com.fiap.hackaton.exception.custom.InterestAlreadyRegisteredException;
 import br.com.fiap.hackaton.persistence.entity.Availability;
-import br.com.fiap.hackaton.persistence.entity.Interest;
 import br.com.fiap.hackaton.persistence.repository.AvailabilityRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +39,11 @@ public class AvailabilityService {
     public List<Availability> findAllAvailable() {
         log.info("Busca todas as vagas disponíveis no banco de dados");
         return availabilityRepository.findAllByIsAvailableTrue();
+    }
+
+    public void updateAvailabilityAsNotified(Availability availability) {
+        log.info("Atualiza a vaga como notificada no banco de dados");
+        availability.setIsAvailable(Boolean.FALSE);
+        availabilityRepository.save(availability);
     }
 }
