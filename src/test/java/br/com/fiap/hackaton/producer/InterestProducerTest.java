@@ -36,7 +36,7 @@ public class InterestProducerTest {
         // Verificamos se o rabbitTemplate foi chamado exatamente 1 vez
         // com a Exchange e Routing Key definidas na sua RabbitConfig
         verify(rabbitTemplate, times(1)).convertAndSend(
-                eq(RabbitConfig.EXCHANGE_NAME),
+                eq(RabbitConfig.INTEREST_EXCHANGE),
                 eq(RabbitConfig.ROUTING_KEY_INTEREST),
                 eq(request)
         );

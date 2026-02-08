@@ -20,13 +20,17 @@ import java.util.Collections;
 @Slf4j
 public class RabbitConfig {
 
-    public static final String EXCHANGE_NAME = "interest_exchange";
+    public static final String INTEREST_EXCHANGE = "interest_exchange";
     public static final String INTEREST_QUEUE = "interest_queue";
     public static final String ROUTING_KEY_INTEREST = "interest.new";
 
+    public static final String AVAILABILITY_EXCHANGE = "availability_exchange";
+    public static final String AVAILABILITY_QUEUE = "availability_queue";
+    public static final String ROUTING_KEY_AVAILABILITY = "availability.new";
+
     @Bean
-    public DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE_NAME);
+    public DirectExchange interestExchange() {
+        return new DirectExchange(INTEREST_EXCHANGE);
     }
 
     @Bean
@@ -35,8 +39,23 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(interestQueue()).to(exchange()).with(ROUTING_KEY_INTEREST);
+    public Binding interestBinding() {
+        return BindingBuilder.bind(interestQueue()).to(interestExchange()).with(ROUTING_KEY_INTEREST);
+    }
+
+    @Bean
+    public DirectExchange availabilityExchange() {
+        return new DirectExchange(AVAILABILITY_EXCHANGE);
+    }
+
+    @Bean
+    public Queue availabilityQueue() {
+        return new Queue(AVAILABILITY_QUEUE, true);
+    }
+
+    @Bean
+    public Binding availabilityBinding() {
+        return BindingBuilder.bind(availabilityQueue()).to(availabilityExchange()).with(ROUTING_KEY_AVAILABILITY);
     }
 
     @Bean
