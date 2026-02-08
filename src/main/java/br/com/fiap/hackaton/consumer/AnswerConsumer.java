@@ -1,0 +1,62 @@
+package br.com.fiap.hackaton.consumer;
+
+import br.com.fiap.hackaton.config.RabbitConfig;
+import br.com.fiap.hackaton.dto.request.AnswerRequest;
+import br.com.fiap.hackaton.exception.handler.RabbitErrorHandler;
+import br.com.fiap.hackaton.persistence.entity.Availability;
+import br.com.fiap.hackaton.persistence.entity.Interest;
+import br.com.fiap.hackaton.service.AvailabilityService;
+import br.com.fiap.hackaton.service.InterestService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@Slf4j
+@AllArgsConstructor
+public class AnswerConsumer {
+
+    private AvailabilityService availabilityService;
+
+    private InterestService interestService;
+
+    private ObjectMapper objectMapper;
+
+    private RabbitErrorHandler rabbitErrorHandler;
+
+    @RabbitListener(queues = RabbitConfig.ANSWER_QUEUE_CONFIRMED)
+    public void confirmAnswer(Message message, Channel channel) {
+
+        String body = new String(message.getBody());
+
+        try {
+            AnswerRequest answerRequest = objectMapper.readValue(body, AnswerRequest.class);
+            Availability availability = availabilityService.findAvailabilityById(answerRequest.availabilityId());
+            Interest interest = interestService.findInterestById(answerRequest.interestId());
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+            rabbitErrorHandler.handleInvalidMessage(message, channel, e);
+
+        }
+    }
+
+    @RabbitListener(queues = RabbitConfig.ANSWER_QUEUE_REJECTED)
+    public void rejectAnswer(Message message, Channel channel) {
+
+        String body = new String(message.getBody());
+
+        try {
+            AnswerRequest answerRequest = objectMapper.readValue(body, AnswerRequest.class);
+            availabilityService.rejectAvailability(answerRequest.availabilityId());
+            interestService.rejectNotification(answerRequest.interestId());
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+            rabbitErrorHandler.handleInvalidMessage(message, channel, e);
+
+        }
+    }
+}

@@ -28,6 +28,13 @@ public class RabbitConfig {
     public static final String AVAILABILITY_QUEUE = "availability_queue";
     public static final String ROUTING_KEY_AVAILABILITY = "availability.new";
 
+    public static final String ANSWER_EXCHANGE = "answer_exchange";
+    public static final String ANSWER_QUEUE_CONFIRMED = "answer_confirmed";
+    public static final String ANSWER_QUEUE_REJECTED = "answer_rejected";
+    public static final String ROUTING_KEY_ANSWER_CONFIRMED = "confirmed.new";
+    public static final String ROUTING_KEY_ANSWER_REJECTED = "rejected.new";
+
+    // Configurações para interesse
     @Bean
     public DirectExchange interestExchange() {
         return new DirectExchange(INTEREST_EXCHANGE);
@@ -43,6 +50,7 @@ public class RabbitConfig {
         return BindingBuilder.bind(interestQueue()).to(interestExchange()).with(ROUTING_KEY_INTEREST);
     }
 
+    // Configurações para disponibilidade
     @Bean
     public DirectExchange availabilityExchange() {
         return new DirectExchange(AVAILABILITY_EXCHANGE);
@@ -56,6 +64,32 @@ public class RabbitConfig {
     @Bean
     public Binding availabilityBinding() {
         return BindingBuilder.bind(availabilityQueue()).to(availabilityExchange()).with(ROUTING_KEY_AVAILABILITY);
+    }
+
+    // Configurações para resposta de confirmação ou rejeição
+    @Bean
+    public DirectExchange answerExchange() {
+        return new DirectExchange(ANSWER_EXCHANGE);
+    }
+
+    @Bean
+    public Queue answerConfirmedQueue() {
+        return new Queue(ANSWER_QUEUE_CONFIRMED, true);
+    }
+
+    @Bean
+    public Binding answerConfirmedBinding() {
+        return BindingBuilder.bind(answerConfirmedQueue()).to(answerExchange()).with(ROUTING_KEY_ANSWER_CONFIRMED);
+    }
+
+    @Bean
+    public Queue answerRejectedQueue() {
+        return new Queue(ANSWER_QUEUE_REJECTED, true);
+    }
+
+    @Bean
+    public Binding answerRejectedBinding() {
+        return BindingBuilder.bind(answerRejectedQueue()).to(answerExchange()).with(ROUTING_KEY_ANSWER_REJECTED);
     }
 
     @Bean
