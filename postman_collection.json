@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "SUS Queue Manager - WhatsApp Webhook Tests",
+    "description": "Collection para testar a integração WhatsApp e fluxo de confirmação/rejeição de consultas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "correlationId",
+      "value": "550e8400-e29b-41d4-a716-446655440000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Webhook - Resposta SIM (1)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payload\": {\n    \"correlationId\": \"{{correlationId}}\",\n    \"body\": \"1\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/webhook/whatsapp",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "webhook",
+            "whatsapp"
+          ]
+        },
+        "description": "Simula resposta do usuário confirmando a antecipação da consulta (1 = SIM)\n\nResultado esperado:\n- Mensagem: ✓ Sua consulta foi confirmada...\n- Status do Interest: ACCEPTED\n- Publicado em answer_confirmed (RabbitMQ)"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Webhook - Resposta NÃO (2)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payload\": {\n    \"correlationId\": \"{{correlationId}}\",\n    \"body\": \"2\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/webhook/whatsapp",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "webhook",
+            "whatsapp"
+          ]
+        },
+        "description": "Simula resposta do usuário rejeitando a antecipação (2 = NÃO)\n\nResultado esperado:\n- Mensagem: Entendido. Sua consulta não foi adiantada...\n- Status do Interest: REJECTED\n- Publicado em answer_rejected (RabbitMQ)\n- Próximo interessado recebe notificação"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Webhook - Delivery Status (DELIVERED)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payload\": {\n    \"correlationId\": \"{{correlationId}}\",\n    \"status\": \"DELIVERED\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/webhook/whatsapp",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "webhook",
+            "whatsapp"
+          ]
+        },
+        "description": "Simula callback da W-API confirmando entrega da mensagem\n\nResultado esperado:\n- Status do Interest: ACCEPTED\n- Publicado em answer_confirmed (RabbitMQ)"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Webhook - Delivery Status (FAILED)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payload\": {\n    \"correlationId\": \"{{correlationId}}\",\n    \"status\": \"FAILED\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/webhook/whatsapp",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "webhook",
+            "whatsapp"
+          ]
+        },
+        "description": "Simula callback da W-API informando falha no envio\n\nResultado esperado:\n- Status do Interest: REJECTED\n- Publicado em answer_rejected (RabbitMQ)\n- Próximo interessado recebe notificação"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Webhook - Timeout Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payload\": {\n    \"correlationId\": \"{{correlationId}}\",\n    \"body\": \"timeout\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/webhook/whatsapp",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "webhook",
+            "whatsapp"
+          ]
+        },
+        "description": "Simula mensagem de timeout (enviada pelo scheduler após 2 horas sem resposta)\n\nResultado esperado:\n- Mensagem: ⏰ O tempo para confirmar expirou...\n- Status do Interest: TIMEOUT\n- Próximo interessado recebe notificação"
+      },
+      "response": []
+    },
+    {
+      "name": "INFO: Como obter o correlationId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5432",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5432"
+        },
+        "description": "Para obter o correlationId:\n\n1. Conecte ao banco PostgreSQL:\n   - Host: localhost\n   - Port: 5432\n   - Database: postech_fase5\n   - User: admin\n   - Password: admin\n\n2. Execute a query:\n   ```sql\n   SELECT id_interest, notification_correlation_id, pacient_name, phone_number \n   FROM interest \n   WHERE notification_status = 'PENDING' \n   LIMIT 1;\n   ```\n\n3. Copie o valor de `notification_correlation_id`\n\n4. No Postman, clique em \"Edit\" na collection e vá em \"Variables\"\n\n5. Atualize o valor de `correlationId` com o valor obtido\n\n6. Agora rode os testes com esse ID"
+      },
+      "response": []
+    }
+  ]
+}

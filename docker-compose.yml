@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-sus-queue-manager
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postech_fase5
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d postech_fase5"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sus-network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq-sus-queue-manager
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sus-network
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+
+networks:
+  sus-network:
+    driver: bridge

@@ -39,7 +39,15 @@ public class InterestService {
     }
 
     public Optional<Interest> findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode) {
-        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(examHashCode);
+        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(examHashCode);
+    }
+
+    public Optional<Interest> findFirstPendingByExamHashCode(String examHashCode) {
+        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(examHashCode);
+    }
+
+    public java.util.List<Interest> findPendingNotificationsBefore(java.time.OffsetDateTime before) {
+        return interestRepository.findByNotificationStatusAndNotificationSentAtBefore("PENDING", before);
     }
 
     public void updateInterestAsNotified(Interest interest) {
@@ -54,6 +62,29 @@ public class InterestService {
         Interest interest = findInterestById(interestId);
 
         interest.setIsNotified(Boolean.FALSE);
+        interest.setNotificationStatus("REJECTED");
+        interest.setUpdatedAt(OffsetDateTime.now());
+        interestRepository.save(interest);
+    }
+
+    public void registerPendingNotification(Interest interest) {
+        log.info("Marca interesse {} como PENDING", interest.getIdInterest());
+        interestRepository.save(interest);
+    }
+
+    public void markNotificationTimeout(Long interestId) {
+        log.info("Marca notification TIMEOUT para interest {}", interestId);
+        Interest interest = findInterestById(interestId);
+        interest.setNotificationStatus("TIMEOUT");
+        interest.setUpdatedAt(OffsetDateTime.now());
+        interestRepository.save(interest);
+    }
+
+    public void markNotificationAccepted(Long interestId) {
+        log.info("Marca notification ACCEPTED para interest {}", interestId);
+        Interest interest = findInterestById(interestId);
+        interest.setNotificationStatus("ACCEPTED");
+        interest.setIsNotified(Boolean.TRUE);
         interest.setUpdatedAt(OffsetDateTime.now());
         interestRepository.save(interest);
     }
@@ -68,5 +99,17 @@ public class InterestService {
             log.info("Interesse com id {} não encontrado", interestId);
             throw new InterestNotFoundException(interestId);
         }
+    }
+
+    public Interest findById(Long interestId) {
+        return findInterestById(interestId);
+    }
+
+    public Interest save(Interest interest) {
+        return interestRepository.save(interest);
+    }
+
+    public java.util.List<Interest> findAll() {
+        return interestRepository.findAll();
     }
 }

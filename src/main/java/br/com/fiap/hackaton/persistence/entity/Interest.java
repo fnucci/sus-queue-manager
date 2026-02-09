@@ -31,6 +31,12 @@ public class Interest {
 
     private String examHashCode;
 
+    private String notificationCorrelationId;
+
+    private String notificationStatus; // PENDING, ACCEPTED, REJECTED, TIMEOUT
+
+    private java.time.OffsetDateTime notificationSentAt;
+
     private Boolean isNotified;
 
     private OffsetDateTime createdAt;
@@ -46,5 +52,13 @@ public class Interest {
         this.isNotified = Boolean.FALSE;
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
+    }
+
+    public void setNotificationCorrelationId(String notificationCorrelationId) {
+        this.notificationCorrelationId = notificationCorrelationId;
+    }
+
+    public String getNotificationCorrelationId() {
+        return notificationCorrelationId;
     }
 }

@@ -12,4 +12,12 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByPacienteCnsAndExamHashCode(String pacienteCns, String examHashCode);
 
     Optional<Interest> findFirstByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode);
+
+    Optional<Interest> findByNotificationCorrelationId(String notificationCorrelationId);
+
+    Optional<Interest> findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(String examHashCode);
+
+    java.util.List<Interest> findByNotificationStatusAndNotificationSentAtBefore(String notificationStatus, java.time.OffsetDateTime before);
+
+    Optional<Interest> findFirstByPhoneNumberAndNotificationStatusOrderByUpdatedAtDesc(String phoneNumber, String notificationStatus);
 }
