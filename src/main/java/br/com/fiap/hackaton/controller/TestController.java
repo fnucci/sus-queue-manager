@@ -1,9 +1,10 @@
 package br.com.fiap.hackaton.controller;
 
 import br.com.fiap.hackaton.persistence.entity.Interest;
+import br.com.fiap.hackaton.persistence.entity.Status;
 import br.com.fiap.hackaton.scheduler.NotifyInterestsScheduler;
 import br.com.fiap.hackaton.service.InterestService;
-import br.com.fiap.hackaton.service.WhatsAppNotificationService;
+import br.com.fiap.hackaton.service.impl.WhatsAppNotificationService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -91,12 +92,12 @@ public class TestController {
 
             Map<String, Object> result = new HashMap<>();
             result.put("interestId", interestId);
-            result.put("pacientName", interest.getPacientName());
+            result.put("pacientName", interest.getPacienteName());
             result.put("phone", interest.getPhoneNumber());
 
             if (response == 1) {
                 // SIM: Confirmar a consulta
-                interest.setNotificationStatus("ACCEPTED");
+                interest.setNotificationStatus(Status.ACCEPTED);
                 interest.setIsNotified(true);
                 interestService.save(interest);
                 
@@ -116,7 +117,7 @@ public class TestController {
                 
             } else if (response == 2) {
                 // NÃO: Rejeitar e avançar para próximo
-                interest.setNotificationStatus("REJECTED");
+                interest.setNotificationStatus(Status.REJECTED);
                 interestService.save(interest);
                 
                 // Enviar mensagem de rejeição

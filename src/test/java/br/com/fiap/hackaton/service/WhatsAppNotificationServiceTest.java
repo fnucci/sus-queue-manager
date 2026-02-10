@@ -3,6 +3,7 @@ package br.com.fiap.hackaton.service;
 import br.com.fiap.hackaton.persistence.entity.Address;
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
+import br.com.fiap.hackaton.service.impl.WhatsAppNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class WhatsAppNotificationServiceTest {
         // Criando dados de teste para Interest
         interest = new Interest();
         interest.setIdInterest(1L);
-        interest.setPacientName("João Silva");
+        interest.setPacienteName("João Silva");
         interest.setPhoneNumber("11999999999");
         interest.setExamName("Eletrocardiograma");
         interest.setPacienteCns("123456789012345");
@@ -68,7 +69,7 @@ class WhatsAppNotificationServiceTest {
         whatsAppNotificationService.sendNotification(interest, availability);
 
         // Assert - verifica se não lançou exceção
-        assertNotNull(interest.getPacientName());
+        assertNotNull(interest.getPacienteName());
         assertNotNull(interest.getExamName());
         assertNotNull(availability.getPrestadorName());
         assertNotNull(availability.getPrestadorEndereco().getCity());
@@ -113,7 +114,7 @@ class WhatsAppNotificationServiceTest {
     @DisplayName("Deve lidar com nome de paciente nulo sem erro")
     void testSendWithNullPacientName() {
         // Arrange
-        interest.setPacientName(null);
+        interest.setPacienteName(null);
 
         // Act & Assert
         assertDoesNotThrow(() -> {

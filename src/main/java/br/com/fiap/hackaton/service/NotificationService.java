@@ -11,4 +11,6 @@ import java.time.OffsetDateTime;
 public interface NotificationService {
 
     public void sendNotification(Interest interest, Availability availability);
+
+    public void sendSimpleMessage(Interest interest, String message);
 }

@@ -5,6 +5,7 @@ import br.com.fiap.hackaton.dto.request.AnswerRequest;
 import br.com.fiap.hackaton.exception.handler.RabbitErrorHandler;
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
+import br.com.fiap.hackaton.service.AnswerService;
 import br.com.fiap.hackaton.service.AvailabilityService;
 import br.com.fiap.hackaton.service.InterestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,13 +21,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AnswerConsumer {
 
-    private AvailabilityService availabilityService;
-
-    private InterestService interestService;
-
+    private AnswerService answerService;
     private ObjectMapper objectMapper;
-
     private RabbitErrorHandler rabbitErrorHandler;
+
 
     @RabbitListener(queues = RabbitConfig.ANSWER_QUEUE_CONFIRMED)
     public void confirmAnswer(Message message, Channel channel) {
@@ -35,8 +33,7 @@ public class AnswerConsumer {
 
         try {
             AnswerRequest answerRequest = objectMapper.readValue(body, AnswerRequest.class);
-            Availability availability = availabilityService.findAvailabilityById(answerRequest.availabilityId());
-            Interest interest = interestService.findInterestById(answerRequest.interestId());
+            answerService.confirmAnswer(answerRequest);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (Exception e) {
             rabbitErrorHandler.handleInvalidMessage(message, channel, e);
@@ -51,12 +48,10 @@ public class AnswerConsumer {
 
         try {
             AnswerRequest answerRequest = objectMapper.readValue(body, AnswerRequest.class);
-            availabilityService.rejectAvailability(answerRequest.availabilityId());
-            interestService.rejectNotification(answerRequest.interestId());
+            answerService.rejectAnswer(answerRequest);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (Exception e) {
             rabbitErrorHandler.handleInvalidMessage(message, channel, e);
-
         }
     }
 }

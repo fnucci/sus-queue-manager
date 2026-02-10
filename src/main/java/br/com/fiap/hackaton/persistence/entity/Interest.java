@@ -21,7 +21,7 @@ public class Interest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idInterest;;
 
-    private String pacientName;
+    private String pacienteName;
 
     private String pacienteCns;
 
@@ -33,9 +33,9 @@ public class Interest {
 
     private String notificationCorrelationId;
 
-    private String notificationStatus; // PENDING, ACCEPTED, REJECTED, TIMEOUT
+    private Status notificationStatus; // PENDING, ACCEPTED, REJECTED, TIMEOUT
 
-    private java.time.OffsetDateTime notificationSentAt;
+    private OffsetDateTime notificationSentAt;
 
     private Boolean isNotified;
 
@@ -44,7 +44,7 @@ public class Interest {
     private OffsetDateTime updatedAt;
 
     public Interest (InterestRequest interestRequest) {
-        this.pacientName = interestRequest.pacienteName();
+        this.pacienteName = interestRequest.pacienteName();
         this.pacienteCns = interestRequest.pacienteCns();
         this.phoneNumber = interestRequest.phoneNumber();
         this.examName = interestRequest.examName();
@@ -52,13 +52,5 @@ public class Interest {
         this.isNotified = Boolean.FALSE;
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
-    }
-
-    public void setNotificationCorrelationId(String notificationCorrelationId) {
-        this.notificationCorrelationId = notificationCorrelationId;
-    }
-
-    public String getNotificationCorrelationId() {
-        return notificationCorrelationId;
     }
 }

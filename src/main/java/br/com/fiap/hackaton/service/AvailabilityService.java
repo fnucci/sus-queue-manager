@@ -4,6 +4,7 @@ import br.com.fiap.hackaton.dto.request.AvailabilityRequest;
 import br.com.fiap.hackaton.exception.custom.AvailabilityAlreadyRegisteredException;
 import br.com.fiap.hackaton.exception.custom.AvailabilityNotFountException;
 import br.com.fiap.hackaton.persistence.entity.Availability;
+import br.com.fiap.hackaton.persistence.entity.Interest;
 import br.com.fiap.hackaton.persistence.repository.AvailabilityRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
+    private final InterestService interestService;
 
     @Transactional
     public void registerAvailability(AvailabilityRequest availabilityRequest) {
@@ -61,7 +63,16 @@ public class AvailabilityService {
         if (availabilityOptional.isPresent()) {
             return availabilityOptional.get();
         } else {
-            throw new AvailabilityNotFountException(availabilityId);
+            throw new AvailabilityNotFountException();
         }
+    }
+
+    public Availability findByInterest(Interest interest) {
+        return availabilityRepository.findByInterest(interest).orElseThrow(AvailabilityNotFountException::new);
+    }
+
+    public void persist(Availability availability) {
+        log.info("Persiste a availability com id {}", availability.getIdAvailability());
+        availabilityRepository.save(availability);
     }
 }

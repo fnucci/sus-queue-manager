@@ -8,11 +8,11 @@
 		<version>3.5.10</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>br.com.fiap.hackaton</groupId>
+	<artifactId>sus-queue-manager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>sus-queue-manager</name>
+	<description>Projeto da fase 5 da postech</description>
 	<url/>
 	<licenses>
 		<license/>

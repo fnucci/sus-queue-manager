@@ -30,6 +30,10 @@ public class Availability {
 
     private Boolean isAvailable;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "interest_id", referencedColumnName = "idInterest")
+    private Interest interest;
+
     public Availability(AvailabilityRequest request) {
         this.prestadorName = request.prestadorName();
         this.prestadorEndereco = new Address(request.prestadorEndereco());

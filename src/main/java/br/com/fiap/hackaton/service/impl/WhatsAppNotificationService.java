@@ -1,8 +1,9 @@
-package br.com.fiap.hackaton.service;
+package br.com.fiap.hackaton.service.impl;
 
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
 import br.com.fiap.hackaton.persistence.repository.InterestRepository;
+import br.com.fiap.hackaton.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,7 @@ public class WhatsAppNotificationService implements NotificationService {
                 "Responda:\n" +
                 "*1* para confirmar a consulta\n" +
                 "*2* para rejeitar a consulta",
-                safe(interest.getPacientName()),
+                safe(interest.getPacienteName()),
                 safe(interest.getExamName()),
                 safe(availability.getPrestadorName()),
                 safe(availability.getPrestadorEndereco() != null ? availability.getPrestadorEndereco().getCity() : null),
@@ -89,6 +90,7 @@ public class WhatsAppNotificationService implements NotificationService {
         return s == null ? "-" : s;
     }
 
+    @Override
     public void sendSimpleMessage(Interest interest, String message) {
         if (interest == null || interest.getPhoneNumber() == null) {
             log.warn("Cannot send message: interest or phone number is null");
