@@ -2,7 +2,6 @@ package br.com.fiap.hackaton.service;
 
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
-import org.springframework.stereotype.Service;
 
 public interface NotificationService {
 

@@ -4,14 +4,9 @@ import br.com.fiap.hackaton.dto.request.AnswerRequest;
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
 import br.com.fiap.hackaton.persistence.entity.Status;
-import br.com.fiap.hackaton.presenter.WebhookResponsePresenter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.OffsetDateTime;
 import java.util.List;

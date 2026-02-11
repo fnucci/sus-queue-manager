@@ -3,7 +3,6 @@ package br.com.fiap.hackaton.service.impl;
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
 import br.com.fiap.hackaton.service.NotificationService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -13,7 +12,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
