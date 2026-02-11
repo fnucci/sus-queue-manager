@@ -14,7 +14,7 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     Optional<Interest> findByPacienteCnsAndExamHashCode(String pacienteCns, String examHashCode);
 
-    Optional<Interest> findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(String examHashCode);
+    Optional<Interest> findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusNotOrderByUpdatedAtAsc(String examHashCode, Status status);
 
     List<Interest> findByNotificationStatusAndNotificationSentAtBefore(Status notificationStatus, OffsetDateTime before);
 

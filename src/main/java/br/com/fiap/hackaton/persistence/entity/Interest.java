@@ -46,10 +46,12 @@ public class Interest {
     public Interest (InterestRequest interestRequest) {
         this.pacienteName = interestRequest.pacienteName();
         this.pacienteCns = interestRequest.pacienteCns();
-        this.phoneNumber = interestRequest.phoneNumber();
+        //Foi alterado para respeitar a api do whatsapp, que exige o código do país no número de telefone. No caso do Brasil, o código é 55.
+        this.phoneNumber = String.format("55%s",interestRequest.phoneNumber() );
         this.examName = interestRequest.examName();
         this.examHashCode = interestRequest.examHashCode();
         this.isNotified = Boolean.FALSE;
+        this.notificationStatus = Status.PENDING;
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
     }

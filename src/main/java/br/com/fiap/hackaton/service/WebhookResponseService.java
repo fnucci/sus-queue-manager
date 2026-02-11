@@ -26,9 +26,9 @@ public class WebhookResponseService {
 
     @Async
     public void sendReponse(Interest interest, Availability availability) {
-
+        log.info("Enviando resposta ao SUS interest id {} availability id {}", interest.getIdInterest(), availability.getIdAvailability());
         //Simula a devolução do endpoint de confirmação da consulta, que poderia ser um sistema externo ou interno
-        restClient.post()
+        var webhookResponse = restClient.post()
                 .uri(webhookResponseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(WebhookResponsePresenter.toResponse(interest, availability)
@@ -39,5 +39,9 @@ public class WebhookResponseService {
                     log.error("Falha no Webhook: status {}", response.getStatusCode());
                 })
                 .toBodilessEntity();
+
+        if(webhookResponse.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            log.info("Resposta do Webhook enviada com sucesso para interest id {} availability id {}", interest.getIdInterest(), availability.getIdAvailability());
+        }
     }
 }

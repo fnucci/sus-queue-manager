@@ -6,10 +6,8 @@ import br.com.fiap.hackaton.persistence.entity.Status;
 import br.com.fiap.hackaton.service.AvailabilityService;
 import br.com.fiap.hackaton.service.InterestService;
 import br.com.fiap.hackaton.service.NotificationService;
-import br.com.fiap.hackaton.service.impl.WhatsAppNotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,7 @@ public class NotifyInterestsScheduler {
 
     List<NotificationService> notificationServices;
 
-    @Scheduled(cron = "0 */5 * * * *") // Executa a cada 5 minutos
+    @Scheduled(cron = "0 */1 * * * *") // Executa a cada 5 minutos
     public void notifyInterests() {
         // Lógica para notificar os pacientes sobre as novas disponibilidades de exames
         log.info("Obtem todas as agendas disponiuveis no banco de dados");
@@ -36,7 +34,7 @@ public class NotifyInterestsScheduler {
 
         for (Availability availability : availabilityList) {
             log.info("Obtem todos os interesses relacionados ao exame e que ainda não foram notificados");
-            Optional<Interest> interestOptional = interestService.findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(availability.getExamHashCode());
+            Optional<Interest> interestOptional = interestService.findFirstInterestByExamHashCodeAndIsNotifiedFalseAndNotificationStatusNotAcceptedOrderByUpdatedAtAsc(availability.getExamHashCode());
             log.info("Notifica via algum canal, whatsapp, email, sms, etc");
             if (interestOptional.isPresent()){
                 Interest interest = interestOptional.get();
@@ -62,7 +60,7 @@ public class NotifyInterestsScheduler {
     }
 
     // Verifica notificações pendentes expiradas e avança na fila a cada 10 minutos
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void processPendingTimeouts() {
         OffsetDateTime cutoff = OffsetDateTime.now().minusMinutes(2);
         List<Interest> expired = interestService.findPendingNotificationsBefore(cutoff);
@@ -73,6 +71,7 @@ public class NotifyInterestsScheduler {
 
             interest.setNotificationStatus(Status.TIMEOUT);
             interest.setUpdatedAt(OffsetDateTime.now());
+            interest.setIsNotified(Boolean.FALSE);
             // persist
             interestService.persist(interest);
 

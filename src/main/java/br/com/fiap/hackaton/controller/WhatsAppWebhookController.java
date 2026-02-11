@@ -21,10 +21,7 @@ import java.util.Map;
 @Slf4j
 public class WhatsAppWebhookController {
 
-    private final List<NotificationService> notificationServices;
-    private final RabbitTemplate rabbitTemplate;
     private final AnswerProducer answerProducer;
-
 
     @PostMapping
     public ResponseEntity<String> handleCallback(@RequestBody Map<String, Object> body) {
@@ -53,11 +50,18 @@ public class WhatsAppWebhookController {
 
             //Valida se a resposta do paciente é 1 (SIM) ou 2 (NÃO) e envia para RabbitMQ
             Boolean answer;
-            if (incomingText.equals("1")) {
-                answer = Boolean.TRUE;
-            } else {
-                answer = Boolean.FALSE;
+            switch (incomingText) {
+                case "1":
+                    answer = Boolean.TRUE;
+                    break;
+                case "2":
+                    answer = Boolean.FALSE;
+                    break;
+                default:
+                    log.warn("Resposta inválida recebida: {}. Esperado '1' para SIM ou '2' para NÃO.", incomingText);
+                    return ResponseEntity.badRequest().body("Resposta inválida. Envie '1' para SIM ou '2' para NÃO.");
             }
+
             AnswerRequest answerRequest = new AnswerRequest(phoneNumber, answer);
             answerProducer.sendAnswer(answerRequest);
         } catch (Exception e) {

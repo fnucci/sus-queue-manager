@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +38,8 @@ public class InterestService {
         interestRepository.save(interest);
     }
 
-    public Optional<Interest> findFirstInterestByExamHashCodeAndIsNotifiedFalseOrderByUpdatedAtAsc(String examHashCode) {
-        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(examHashCode);
-    }
-
-    public Optional<Interest> findFirstPendingByExamHashCode(String examHashCode) {
-        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusIsNullOrderByUpdatedAtAsc(examHashCode);
+    public Optional<Interest> findFirstInterestByExamHashCodeAndIsNotifiedFalseAndNotificationStatusNotAcceptedOrderByUpdatedAtAsc(String examHashCode) {
+        return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusNotOrderByUpdatedAtAsc(examHashCode, Status.ACCEPTED);
     }
 
     public List<Interest> findPendingNotificationsBefore(java.time.OffsetDateTime before) {
@@ -56,17 +51,6 @@ public class InterestService {
         interestRepository.save(interest);
     }
 
-    public Interest findInterestById(Long interestId) {
-        Optional<Interest> interestOptional = interestRepository.findById(interestId);
-
-        if (interestOptional.isPresent()) {
-            return interestOptional.get();
-        } else {
-            log.info("Interesse com id {} não encontrado", interestId);
-            throw new InterestNotFoundException();
-        }
-    }
-
     public Interest findInterestByPhoneNumberAndStatus(String phoneNumber, Status status) {
         Optional<Interest> interestOptional = interestRepository.findFirstByPhoneNumberAndNotificationStatusOrderByUpdatedAtDesc(phoneNumber, status);
 
@@ -76,13 +60,5 @@ public class InterestService {
             log.info("Interesse com telefone {} e status {} não encontrado", phoneNumber, status);
             throw new InterestNotFoundException();
         }
-    }
-
-    public Interest findById(Long interestId) {
-        return findInterestById(interestId);
-    }
-
-    public List<Interest> findAll() {
-        return interestRepository.findAll();
     }
 }
