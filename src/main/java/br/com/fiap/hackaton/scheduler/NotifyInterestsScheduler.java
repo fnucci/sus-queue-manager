@@ -29,7 +29,6 @@ public class NotifyInterestsScheduler {
     List<NotificationService> notificationServices;
 
     @Scheduled(cron = "0 */5 * * * *") // Executa a cada 5 minutos
-    @Async
     public void notifyInterests() {
         // Lógica para notificar os pacientes sobre as novas disponibilidades de exames
         log.info("Obtem todas as agendas disponiuveis no banco de dados");
@@ -43,20 +42,27 @@ public class NotifyInterestsScheduler {
                 Interest interest = interestOptional.get();
                 // send question and mark as PENDING
                 this.notificationServices.forEach(v -> v.sendNotification(interest, availability));
+
+                // atualiza o interesse para PENDING
                 interest.setNotificationStatus(Status.PENDING);
-                interest.setNotificationSentAt(java.time.OffsetDateTime.now());
-                interest.setUpdatedAt(java.time.OffsetDateTime.now());
-                // persist change
-                // using service to save
-                interestService.registerPendingNotification(interest);
+                interest.setNotificationSentAt(OffsetDateTime.now());
+                interest.setUpdatedAt(OffsetDateTime.now());
+                interest.setIsNotified(Boolean.TRUE);
+                // persiste change o interest
+                interestService.persist(interest);
+
+                //atualiza a availability para não disponível e associa o interesse
+                availability.setInterest(interest);
+                availability.setIsAvailable(Boolean.FALSE);
+
+                //persiste a change da availability
+                availabilityService.persist(availability);
             }
-            availabilityService.updateAvailabilityAsNotified(availability);
         }
     }
 
     // Verifica notificações pendentes expiradas e avança na fila a cada 10 minutos
     @Scheduled(cron = "0 */10 * * * *")
-    @Async
     public void processPendingTimeouts() {
         OffsetDateTime cutoff = OffsetDateTime.now().minusMinutes(2);
         List<Interest> expired = interestService.findPendingNotificationsBefore(cutoff);

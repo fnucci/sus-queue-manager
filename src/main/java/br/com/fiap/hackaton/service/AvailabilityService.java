@@ -44,29 +44,6 @@ public class AvailabilityService {
         return availabilityRepository.findAllByIsAvailableTrue();
     }
 
-    public void updateAvailabilityAsNotified(Availability availability) {
-        log.info("Atualiza a vaga como notificada no banco de dados");
-        availability.setIsAvailable(Boolean.FALSE);
-        availabilityRepository.save(availability);
-    }
-
-    public void rejectAvailability(Long availabilityId) {
-        log.info("Rejeita a vaga com id {}", availabilityId);
-        Availability availability = findAvailabilityById(availabilityId);
-        availability.setIsAvailable(Boolean.TRUE);
-        availabilityRepository.save(availability);
-    }
-
-    public Availability findAvailabilityById(Long availabilityId) {
-        log.info("Busca a vaga com id {} no banco de dados", availabilityId);
-        Optional<Availability> availabilityOptional = availabilityRepository.findById(availabilityId);
-        if (availabilityOptional.isPresent()) {
-            return availabilityOptional.get();
-        } else {
-            throw new AvailabilityNotFountException();
-        }
-    }
-
     public Availability findByInterest(Interest interest) {
         return availabilityRepository.findByInterest(interest).orElseThrow(AvailabilityNotFountException::new);
     }

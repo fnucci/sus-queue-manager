@@ -51,20 +51,8 @@ public class InterestService {
         return interestRepository.findByNotificationStatusAndNotificationSentAtBefore(Status.PENDING, before);
     }
 
-    public void updateInterestAsNotified(Interest interest) {
-        log.info("Atualiza o interesse como notificado");
-        interest.setIsNotified(Boolean.TRUE);
-        interest.setUpdatedAt(OffsetDateTime.now());
-        interestRepository.save(interest);
-    }
-
     public void persist(Interest interest) {
         log.info("Persiste o interestcom id {}", interest.getIdInterest());
-        interestRepository.save(interest);
-    }
-
-    public void registerPendingNotification(Interest interest) {
-        log.info("Marca interesse {} como PENDING", interest.getIdInterest());
         interestRepository.save(interest);
     }
 
@@ -92,10 +80,6 @@ public class InterestService {
 
     public Interest findById(Long interestId) {
         return findInterestById(interestId);
-    }
-
-    public Interest save(Interest interest) {
-        return interestRepository.save(interest);
     }
 
     public List<Interest> findAll() {

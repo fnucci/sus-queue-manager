@@ -2,11 +2,11 @@ package br.com.fiap.hackaton.service.impl;
 
 import br.com.fiap.hackaton.persistence.entity.Availability;
 import br.com.fiap.hackaton.persistence.entity.Interest;
-import br.com.fiap.hackaton.persistence.repository.InterestRepository;
 import br.com.fiap.hackaton.service.NotificationService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -16,36 +16,27 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class WhatsAppNotificationService implements NotificationService {
 
     private final WebClient webClient;
-    private final InterestRepository interestRepository;
-    private final Logger log = LoggerFactory.getLogger(WhatsAppNotificationService.class);
+
     @Value("${wapi.instanceId}")
     private String instanceId;
 
-    public WhatsAppNotificationService(WebClient wapiWebClient, InterestRepository interestRepository) {
+    public WhatsAppNotificationService(WebClient wapiWebClient) {
         this.webClient = wapiWebClient;
-        this.interestRepository = interestRepository;
     }
 
     @Override
+    @Async
     public void sendNotification(Interest interest, Availability availability) {
-        String correlationId = UUID.randomUUID().toString();
-        interest.setNotificationCorrelationId(correlationId);
-        interest.setUpdatedAt(OffsetDateTime.now());
-        if (interestRepository != null) {
-            interestRepository.save(interest);
-        } else {
-            log.warn("InterestRepository is null — skipping persist of correlationId for interest={}", interest.getIdInterest());
-        }
-
         String message = buildNotificationMessage(interest, availability);
 
         Map<String, Object> payload = Map.of(
-            "phone", safe(interest.getPhoneNumber()),
-            "message", safe(message),
-            "delayMessage", 15
+                "phone", safe(interest.getPhoneNumber()),
+                "message", safe(message),
+                "delayMessage", 15
         );
 
         if (webClient != null) {
@@ -69,9 +60,9 @@ public class WhatsAppNotificationService implements NotificationService {
     private String buildNotificationMessage(Interest interest, Availability availability) {
         return String.format(
                 "Olá %s, o exame %s foi disponibilizado por %s em %s. Data: %s\n\n" +
-                "Responda:\n" +
-                "*1* para confirmar a consulta\n" +
-                "*2* para rejeitar a consulta",
+                        "Responda:\n" +
+                        "*1* para confirmar a consulta\n" +
+                        "*2* para rejeitar a consulta",
                 safe(interest.getPacienteName()),
                 safe(interest.getExamName()),
                 safe(availability.getPrestadorName()),
@@ -91,6 +82,7 @@ public class WhatsAppNotificationService implements NotificationService {
     }
 
     @Override
+    @Async
     public void sendSimpleMessage(Interest interest, String message) {
         if (interest == null || interest.getPhoneNumber() == null) {
             log.warn("Cannot send message: interest or phone number is null");
