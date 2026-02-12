@@ -1,0 +1,112 @@
+{
+  "info": {
+    "_postman_id": "2f76ecb6-426a-49d1-a4dd-c0247c420204",
+    "name": "Fiap Hackaton fase 5",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "11554107",
+    "_collection_link": "https://go.postman.co/collection/11554107-2f76ecb6-426a-49d1-a4dd-c0247c420204?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Interest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"pacienteName\": \"Felipe Nucci\",\r\n        \"pacienteCns\": \"2139847582914\",\r\n        \"phoneNumber\": \"11999999999\",\r\n        \"examName\": \"Tomografia computadorizada\",\r\n        \"examHashCode\": \"205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/interests",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "interests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RecieveAvalilability",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"prestadorName\": \"Hospital Central de Diagnósticos\",\r\n  \"prestadorEndereco\": {\r\n    \"street\": \"Avenida Paulista\",\r\n    \"number\": \"1000\",\r\n    \"neighborhood\": \"Bela Vista\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"zipCode\": \"01310-100\"\r\n  },\r\n  \"examName\": \"Tomografia computadorizada\",\r\n  \"examHashCode\": \"205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911\",\r\n  \"dataHoraDisponivel\": \"2026-02-15T15:30:00-03:00\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/availability",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "availability"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Response webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pacienteCns\": \"2139847582914\",\r\n  \"pacienteName\": \"Felipe Nucci\",\r\n  \"examHashCode\": \"205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911\",\r\n  \"prestadorName\": \"Hospital Central de Diagnósticos\",\r\n  \"prestadorEndereco\": {\r\n    \"street\": \"Avenida Paulista\",\r\n    \"number\": \"1000\",\r\n    \"neighborhood\": \"Bela Vista\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"zipCode\": \"01310-100\"\r\n  },\r\n  \"dataHoraMarcada\": \"2026-02-15T19:30Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/webhook/response",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "webhook",
+            "response"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
