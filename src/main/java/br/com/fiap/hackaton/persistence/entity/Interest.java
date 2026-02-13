@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +19,8 @@ public class Interest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idInterest;;
+    private Long idInterest;
+    ;
 
     private String pacienteName;
 
@@ -35,24 +36,24 @@ public class Interest {
 
     private Status notificationStatus; // PENDING, ACCEPTED, REJECTED, TIMEOUT
 
-    private OffsetDateTime notificationSentAt;
+    private LocalDateTime notificationSentAt;
 
     private Boolean isNotified;
 
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
-    public Interest (InterestRequest interestRequest) {
+    public Interest(InterestRequest interestRequest) {
         this.pacienteName = interestRequest.pacienteName();
         this.pacienteCns = interestRequest.pacienteCns();
         //Foi alterado para respeitar a api do whatsapp, que exige o código do país no número de telefone. No caso do Brasil, o código é 55.
-        this.phoneNumber = String.format("55%s",interestRequest.phoneNumber() );
+        this.phoneNumber = String.format("55%s", interestRequest.phoneNumber());
         this.examName = interestRequest.examName();
         this.examHashCode = interestRequest.examHashCode();
         this.isNotified = Boolean.FALSE;
         this.notificationStatus = Status.PENDING;
-        this.createdAt = OffsetDateTime.now();
-        this.updatedAt = OffsetDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

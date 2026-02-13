@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -43,8 +44,8 @@ public class NotifyInterestsScheduler {
 
                 // atualiza o interesse para PENDING
                 interest.setNotificationStatus(Status.PENDING);
-                interest.setNotificationSentAt(OffsetDateTime.now());
-                interest.setUpdatedAt(OffsetDateTime.now());
+                interest.setNotificationSentAt(LocalDateTime.now());
+                interest.setUpdatedAt(LocalDateTime.now());
                 interest.setIsNotified(Boolean.TRUE);
                 // persiste change o interest
                 interestService.persist(interest);
@@ -62,7 +63,7 @@ public class NotifyInterestsScheduler {
     // Verifica notificações pendentes expiradas e avança na fila a cada 10 minutos
     @Scheduled(cron = "0 */5 * * * *")
     public void processPendingTimeouts() {
-        OffsetDateTime cutoff = OffsetDateTime.now().minusMinutes(2);
+        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(2);
         List<Interest> expired = interestService.findPendingNotificationsBefore(cutoff);
         for (Interest interest : expired) {
             log.info("Notification timeout for interest id={}", interest.getIdInterest());
@@ -70,7 +71,7 @@ public class NotifyInterestsScheduler {
             this.notificationServices.forEach(v -> v.sendSimpleMessage(interest, message));
 
             interest.setNotificationStatus(Status.TIMEOUT);
-            interest.setUpdatedAt(OffsetDateTime.now());
+            interest.setUpdatedAt(LocalDateTime.now());
             interest.setIsNotified(Boolean.FALSE);
             // persist
             interestService.persist(interest);

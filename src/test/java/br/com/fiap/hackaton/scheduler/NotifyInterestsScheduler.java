@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ class NotifyInterestsSchedulerTest {
         availability.setInterest(interestExpired);
         availability.setIsAvailable(false);
 
-        when(interestService.findPendingNotificationsBefore(any(OffsetDateTime.class)))
+        when(interestService.findPendingNotificationsBefore(any(LocalDateTime.class)))
                 .thenReturn(List.of(interestExpired));
         when(availabilityService.findByInterest(interestExpired)).thenReturn(availability);
 

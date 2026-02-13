@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +51,7 @@ class InterestRepositoryTest {
     void deveSimularBuscaPorStatusEDataAnterior() {
         // Arrange
         Status status = Status.PENDING;
-        OffsetDateTime dataLimite = OffsetDateTime.now();
+        LocalDateTime dataLimite = LocalDateTime.now();
         Interest mockInterest = new Interest();
         mockInterest.setNotificationStatus(status);
 
@@ -96,7 +96,7 @@ class InterestRepositoryTest {
                 .thenReturn(Collections.emptyList());
 
         // Act
-        List<Interest> result = interestRepository.findByNotificationStatusAndNotificationSentAtBefore(Status.PENDING, OffsetDateTime.now());
+        List<Interest> result = interestRepository.findByNotificationStatusAndNotificationSentAtBefore(Status.PENDING, LocalDateTime.now());
 
         // Assert
         assertTrue(result.isEmpty());

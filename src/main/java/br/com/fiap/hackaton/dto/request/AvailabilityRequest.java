@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 public record AvailabilityRequest(
         @NotBlank
@@ -17,8 +17,8 @@ public record AvailabilityRequest(
         @NotBlank
         String examHashCode,
         @NotNull
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
         @Future
-        OffsetDateTime dataHoraDisponivel
+        LocalDateTime dataHoraDisponivel
 ) {
 }

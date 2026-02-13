@@ -1,10 +1,11 @@
 package br.com.fiap.hackaton.persistence.entity;
 
 import br.com.fiap.hackaton.dto.request.AvailabilityRequest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,8 @@ public class Availability {
 
     private String examHashCode;
 
-    private OffsetDateTime dataHoraDisponivel;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
+    private LocalDateTime dataHoraDisponivel;
 
     private Boolean isAvailable;
 

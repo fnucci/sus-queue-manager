@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class AnswerService {
         Interest interest = interestService.findInterestByPhoneNumberAndStatus(request.phoneNumber(), Status.PENDING);
         interest.setIsNotified(Boolean.FALSE);
         interest.setNotificationStatus(Status.ACCEPTED);
-        interest.setUpdatedAt(OffsetDateTime.now());
+        interest.setUpdatedAt(LocalDateTime.now());
         interestService.persist(interest);
 
         Availability availability = availabilityService.findByInterest(interest);
@@ -48,7 +49,7 @@ public class AnswerService {
         Interest interest = interestService.findInterestByPhoneNumberAndStatus(request.phoneNumber(), Status.PENDING);
         interest.setIsNotified(Boolean.FALSE);
         interest.setNotificationStatus(Status.REJECTED);
-        interest.setUpdatedAt(OffsetDateTime.now());
+        interest.setUpdatedAt(LocalDateTime.now());
         interestService.persist(interest);
 
         Availability availability = availabilityService.findByInterest(interest);

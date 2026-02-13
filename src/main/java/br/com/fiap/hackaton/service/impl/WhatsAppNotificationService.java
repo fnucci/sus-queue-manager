@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class WhatsAppNotificationService implements NotificationService {
         );
     }
 
-    private String formatDate(OffsetDateTime dateTime) {
+    private String formatDate(LocalDateTime dateTime) {
         if (dateTime == null) return "-";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return dateTime.format(formatter);

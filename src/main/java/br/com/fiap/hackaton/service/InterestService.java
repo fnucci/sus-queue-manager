@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class InterestService {
         return interestRepository.findFirstByExamHashCodeAndIsNotifiedFalseAndNotificationStatusNotOrderByUpdatedAtAsc(examHashCode, Status.ACCEPTED);
     }
 
-    public List<Interest> findPendingNotificationsBefore(java.time.OffsetDateTime before) {
+    public List<Interest> findPendingNotificationsBefore(LocalDateTime before) {
         return interestRepository.findByNotificationStatusAndNotificationSentAtBefore(Status.PENDING, before);
     }
 

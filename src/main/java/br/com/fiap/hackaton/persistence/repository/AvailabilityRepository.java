@@ -5,14 +5,14 @@ import br.com.fiap.hackaton.persistence.entity.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
 
-    Optional<Availability> findByExamHashCodeAndDataHoraDisponivel(String examHashCode, OffsetDateTime dataHoraDisponivel);
+    Optional<Availability> findByExamHashCodeAndDataHoraDisponivel(String examHashCode, LocalDateTime dataHoraDisponivel);
 
     List<Availability> findAllByIsAvailableTrue();
 
