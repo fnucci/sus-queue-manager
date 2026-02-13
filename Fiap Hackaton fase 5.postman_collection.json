@@ -54,7 +54,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"prestadorName\": \"Hospital Central de Diagnósticos\",\r\n  \"prestadorEndereco\": {\r\n    \"street\": \"Avenida Paulista\",\r\n    \"number\": \"1000\",\r\n    \"neighborhood\": \"Bela Vista\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"zipCode\": \"01310-100\"\r\n  },\r\n  \"examName\": \"Tomografia computadorizada\",\r\n  \"examHashCode\": \"205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911\",\r\n  \"dataHoraDisponivel\": \"2026-02-15T15:30:00-03:00\"\r\n}",
+          "raw": "{\r\n  \"prestadorName\": \"Hospital Central de Diagnósticos\",\r\n  \"prestadorEndereco\": {\r\n    \"street\": \"Avenida Paulista\",\r\n    \"number\": \"1000\",\r\n    \"neighborhood\": \"Bela Vista\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"zipCode\": \"01310-100\"\r\n  },\r\n  \"examName\": \"Tomografia computadorizada\",\r\n  \"examHashCode\": \"205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911\",\r\n  \"dataHoraDisponivel\": \"2026-02-15T15:30:00\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
