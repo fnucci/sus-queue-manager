@@ -28,7 +28,8 @@
           }
         },
         "url": {
-          "raw": "localhost:8080/interests",
+          "raw": "http://localhost:8080/interests",
+          "protocol": "http",
           "host": [
             "localhost"
           ],
@@ -61,7 +62,8 @@
           }
         },
         "url": {
-          "raw": "localhost:8080/availability",
+          "raw": "http://localhost:8080/availability",
+          "protocol": "http",
           "host": [
             "localhost"
           ],
