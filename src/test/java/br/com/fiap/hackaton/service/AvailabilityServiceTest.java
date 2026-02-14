@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,7 @@ class AvailabilityServiceTest {
     @DisplayName("Deve registrar uma disponibilidade com sucesso")
     void deveRegistrarDisponibilidadeComSucesso() {
         // Arrange
-        OffsetDateTime data = OffsetDateTime.now();
+        LocalDateTime data = LocalDateTime.now();
         AvailabilityRequest request = new AvailabilityRequest("TestePrestador", new AddressRequest("Rua teste", "103", "Vila da telha", "Sao Paulo", "SP", "04833101"), "Tomografia Computadorizada", "205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911", data); // Presumindo construtor padrão
 
         when(availabilityRepository.findByExamHashCodeAndDataHoraDisponivel(request.examHashCode(), request.dataHoraDisponivel()))
@@ -55,7 +56,7 @@ class AvailabilityServiceTest {
     @DisplayName("Deve lançar AvailabilityAlreadyRegisteredException quando a vaga já existir")
     void deveLancarExcecaoQuandoVagaJaExistir() {
         // Arrange
-        OffsetDateTime data = OffsetDateTime.now();
+        LocalDateTime data = LocalDateTime.now();
         AvailabilityRequest request = new AvailabilityRequest("TestePrestador", new AddressRequest("Rua teste", "103", "Vila da telha", "Sao Paulo", "SP", "04833101"), "Tomografia Computadorizada", "205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911", data); // Presumindo construtor padrão
 
         when(availabilityRepository.findByExamHashCodeAndDataHoraDisponivel(request.examHashCode(), request.dataHoraDisponivel()))

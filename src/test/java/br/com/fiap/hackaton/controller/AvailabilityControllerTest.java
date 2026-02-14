@@ -53,7 +53,7 @@ public class AvailabilityControllerTest {
                    },
                    "examName": "Tomografia computadorizada",
                    "examHashCode": "205c0ec4dd914cecb1a166d1d72434e6a1f1fceda26220b14d75b533afea6911",
-                   "dataHoraDisponivel": "2026-02-15T15:30:00-03:00"
+                   "dataHoraDisponivel": "2026-02-15T15:30:00"
                  }""";
 
         mockMvc.perform(post("/availability")

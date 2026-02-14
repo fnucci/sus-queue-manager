@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ class AvailabilityRepositoryTest {
     void deveSimularBuscaPorHashEData() {
         // Arrange
         String hash = "EXAM-123";
-        OffsetDateTime dataHora = OffsetDateTime.now();
+        LocalDateTime dataHora = LocalDateTime.now();
         Availability mockAvailability = new Availability();
         mockAvailability.setExamHashCode(hash);
         mockAvailability.setDataHoraDisponivel(dataHora);

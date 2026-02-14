@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +50,7 @@ class WhatsAppNotificationServiceTest {
         availability.setIdAvailability(1L);
         availability.setPrestadorName("Dr. Pedro");
         availability.setPrestadorEndereco(address);
-        availability.setDataHoraDisponivel(OffsetDateTime.now());
+        availability.setDataHoraDisponivel(LocalDateTime.now());
         availability.setIsAvailable(true);
     }
 
@@ -80,7 +81,7 @@ class WhatsAppNotificationServiceTest {
     void testFormatDate() {
         // Act
         OffsetDateTime now = OffsetDateTime.now();
-        
+
         // Assert - verifica se consegue enviar a notificação sem erros de formatação
         assertDoesNotThrow(() -> {
             whatsAppNotificationService.sendNotification(interest, availability);
